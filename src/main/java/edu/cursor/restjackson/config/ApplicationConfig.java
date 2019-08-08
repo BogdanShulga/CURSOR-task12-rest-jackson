@@ -1,13 +1,21 @@
-package edu.cursor.restjackson.models;
+package edu.cursor.restjackson.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.cursor.restjackson.models.User;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.*;
 
 @Configuration
-public class RandomUserListGenerator {
+public class ApplicationConfig {
     @Bean
     public List<User> getRandomUserList() {
         Integer accessId = 0;
@@ -26,12 +34,29 @@ public class RandomUserListGenerator {
             int month = random.nextInt(7) + 1;
             int day = random.nextInt(28) + 1;
             LocalDate lastLoginDate = LocalDate.of(2019, month, day);
-            Map<String, Boolean> homeworkToIsDone = new TreeMap<>();
+            Map<String, Boolean> homeworkToIsDone = new LinkedHashMap<>();
             for (int j = 1; j <= 5; j++) {
                 homeworkToIsDone.put("homework-" + j, random.nextBoolean());
             }
-            users.add(new User(name, surname, lastLoginDate, accessId, email, homeworkToIsDone));
+            User user = new User();
+            user.setName(name);
+            user.setSurname(surname);
+            user.setLastLoginDate(lastLoginDate);
+            user.setAccessId(accessId);
+            user.setEmail(email);
+            user.setHomeworkToIsDone(homeworkToIsDone);
+            users.add(user);
         }
         return users;
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
+    }
+
+    @Bean
+    public ObjectMapper getShortDateObjectMapper() {
+        return new ObjectMapper();
     }
 }
