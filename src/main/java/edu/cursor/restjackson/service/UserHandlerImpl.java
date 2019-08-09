@@ -1,14 +1,13 @@
 package edu.cursor.restjackson.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.cursor.restjackson.models.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +16,15 @@ public class UserHandlerImpl implements UserHandler {
     private static final String TEST_FILE_PATH = "target/output.json";
     private static Integer INITIAL_LOGIN_ID = 0;
     private ObjectMapper shortDateObjectMapper;
+    private List<User> users;
+
+    @Override
+    public User getUserByEmail(String email) {
+        return users.stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findAny()
+                .orElseThrow(NotFoundException::new);
+    }
 
     @Override
     public String receiveUser(User user) {

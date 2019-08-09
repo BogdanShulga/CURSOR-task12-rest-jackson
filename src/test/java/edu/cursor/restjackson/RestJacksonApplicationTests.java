@@ -35,6 +35,18 @@ public class RestJacksonApplicationTests {
     }
 
     @Test
+    public void getUserByEmailTest() {
+        int usersSize = users.size();
+        System.out.println("From test" + users);
+        User randomUser = users.get(random.nextInt(usersSize));
+        String url = USER_URL + "/" + randomUser.getEmail();
+
+        ResponseEntity<User> responseEntity = restTemplate.getForEntity(url, User.class);
+
+        assertEquals(randomUser, responseEntity.getBody());
+    }
+
+    @Test
     public void userSaveToFileTest() {
         int usersSize = users.size();
         User randomUser = users.get(random.nextInt(usersSize));

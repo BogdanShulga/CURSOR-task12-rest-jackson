@@ -34,3 +34,7 @@ build/
 .mvn/
 mvnw
 mvnw.cmd
+
+
+
+src/main/resources/userList.json
